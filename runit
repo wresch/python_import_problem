@@ -29,7 +29,10 @@ for N in $@; do
                    --workdir $PWD \
                    --sshloginfile ${nodelist}.tmp \
                    --bar \
-                   $script $n > $joblog
-                   ##--joblog $joblog \
+                   $script $n > ${joblog}.tmp
+    echo "OK:   $(grep -c ok ${joblog}.tmp)"
+    echo "FAIL: $(grep -c fail ${joblog}.tmp)"
+    egrep -v 'ok|fail' ${joblog}.tmp > ${joblog}
+    rm ${joblog}.tmp
 done
 rm ${nodelist}.tmp

@@ -7,7 +7,7 @@ n=${1:-1}
 fn=tmp/$(hostname).$(date +'%s')
 st=$(date +'%s.%3N')
 for i in $(seq 1 $n); do
-    $python -c "$import" &>> $fn &
+    $python -c "$import" &>> $fn && echo ok || echo fail &
 done
 wait
 en=$(date +'%s.%3N')
