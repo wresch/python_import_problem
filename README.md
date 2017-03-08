@@ -38,14 +38,14 @@ Results
 First, the overall time it took to start n * N python interpreters each
 importing the 8 modules listed above. Note the log-log scale:
 
-![overall_time]("/overall_time_loglog.png" "Overall runtimes")
+![overall_time](overall_time_loglog.png?raw=true "Overall runtimes")
 
 The singularity container scaled better in these experiments than the standard
 python installation.
 
 And here are the individual runtimes for each gaggle:
 
-![individual_time]("/individual_time_loglog.png" "Individual runtimes")
+![individual_time](individual_time_loglog.png?raw=true "Individual runtimes")
 
 The grey points are the full dataset shown as background for easier
 comparison. The colored points are the subsets (i.e. standard conda python
