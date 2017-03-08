@@ -1,0 +1,35 @@
+#! /bin/bash
+# USAGE: runit nodelist script n N [N...]
+# n: python jobs per node
+# N: number of nodes to run on
+
+nodelist=$1   # list of all nodes to run on
+shift
+script=$1
+shift
+n=$1
+shift
+
+nnodes=$(cat ${nodelist} | wc -l)
+
+# the number of python interpreters that are started are
+# determined by the script
+
+module load parallel
+for N in $@; do
+    if [[ $N -gt $nnodes ]]; then
+        continue
+    fi
+    joblog=$PWD/log/${script}.$n.$N.$(date +'%F_%H-%M').log
+    shuf -n $N ${nodelist} > ${nodelist}.tmp
+
+    for i in $(seq $N); do echo "$i"; done \
+        | parallel --jobs 1 --env PATH \
+                   --sshdelay 0.001 \
+                   --workdir $PWD \
+                   --sshloginfile ${nodelist}.tmp \
+                   --bar \
+                   $script $n > $joblog
+                   ##--joblog $joblog \
+done
+rm ${nodelist}.tmp

@@ -1,0 +1,40 @@
+BootStrap: yum
+OSVersion: 7
+MirrorURL: http://mirror.centos.org/centos-%{OSVERSION}/%{OSVERSION}/os/$basearch/
+Include: yum
+
+# If you want the updates (available at the bootstrap date) to be installed
+# inside the container during the bootstrap instead of the General Availability
+# point release (7.x) then uncomment the following line
+#UpdateURL: http://mirror.centos.org/centos-%{OSVERSION}/%{OSVERSION}/updates/$basearch/
+
+################################################################################
+%runscript
+################################################################################
+/opt/conda/envs/py27/bin/python "$@"
+
+################################################################################
+%setup
+################################################################################
+cp $PWD/py27.yml $SINGULARITY_ROOTFS/tmp/py27.yml
+ls -lh $SINGULARITY_ROOTFS/root
+
+################################################################################
+%post
+################################################################################
+yum -y install vim-minimal wget bash tar bzip2
+cd /tmp
+[ -f py27.yml ] || exit 1
+wget https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh
+bash Miniconda2-latest-Linux-x86_64.sh -f -b -p /opt/conda
+export PATH=/opt/conda/bin:$PATH
+conda env create -n py27 -f ./py27.yml
+
+# clean up so image can be shrunk
+yum clean all
+conda clean --all --yes
+
+cat <<EOF > /environment
+export PATH=/opt/conda/bin:/usr/local/bin:/usr/bin:/bin
+export ANACONDA_HOME=/opt/conda
+EOF

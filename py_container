@@ -1,0 +1,15 @@
+#! /bin/bash
+python=/usr/local/Anaconda/temp/python
+import="import numpy;import scipy;import pandas;import sqlite3;"
+import+="import Bio;import matplotlib;import seaborn; import bokeh;"
+
+n=${1:-1}
+fn=tmp/$(hostname).$(date +'%s')
+st=$(date +'%s.%3N')
+for i in $(seq 1 $n); do
+    $python -c "$import" &>> $fn &
+done
+wait
+en=$(date +'%s.%3N')
+el=$(echo "${en} - ${st}" | bc -l)
+echo "$(hostname)|${st}|${en}|${el}"
