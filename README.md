@@ -42,7 +42,7 @@ Results
 ------------------------------------------------------------------------
 
 First, the overall time it took to start n * N python interpreters each
-importing the 8 modules listed above. Note the log-log scale:
+importing the 8 modules listed above. Note that both plots are **log-log scale**:
 
 ![overall_time](overall_time_loglog.png?raw=true "Overall runtimes")
 
